@@ -1,4 +1,4 @@
-import User from "../models/User";
+import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 
 export const signup = (req, res) => {
@@ -19,11 +19,29 @@ export const signup = (req, res) => {
             return res.status(400).json({ message: "invalid email format" })
         }
 
-        const user = User.findOne({email: email})
+
+        //checking if user already exist 
+        const user = async () => {
+            return User.findOne({ email: email });
+        }
         if (user) {
-            return res.status(400).json({ message : "User already exists"});
+            return res.status(400).json({ message: "User already exists" });
         }
 
+        //hashing password
+        const salt =  async () => {
+            return await bcrypt.genSalt(10);    
+        }
+        
+        const hashedPassword = async () => {
+           return bcrypt.hash(password,salt);
+        }
+
+        const newUser = new User({
+            fullName,
+            email,
+            password : hashedPassword
+        })
 
 
     } catch (error) {
