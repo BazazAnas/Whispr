@@ -19,7 +19,6 @@ export const signup = (req, res) => {
             return res.status(400).json({ message: "invalid email format" })
         }
 
-
         //checking if user already exist 
         const user = async () => {
             return User.findOne({ email: email });
@@ -29,23 +28,29 @@ export const signup = (req, res) => {
         }
 
         //hashing password
-        const salt =  async () => {
-            return await bcrypt.genSalt(10);    
+        const salt = async () => {
+            return await bcrypt.genSalt(10);
         }
-        
+
         const hashedPassword = async () => {
-           return bcrypt.hash(password,salt);
+            return bcrypt.hash(password, salt);
         }
 
         const newUser = new User({
             fullName,
             email,
-            password : hashedPassword
+            password: hashedPassword
         })
 
+        if (newUser) {
+            
+        } else {
+            res.status(400).json({ message: "Invalid user data" })
+        }
 
     } catch (error) {
-
+        console.log("Error in signup  controller", error)
+        res.status(500).json({ message : "Internal server error"})
     }
 
 }
