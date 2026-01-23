@@ -1,42 +1,36 @@
-import { json } from "express";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 
-export const signup = (req, res) => {
+export const signup = async (req, res) => {
 
+    const { fullName, email, password } = req.body;
     try {
-        const { fullName, email, password } = req.body;
 
         if (!fullName || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
-        if (password.length() > 6) {
+        if (password.length > 6) {
             return res.status(400).json({ message: "password must be at least 6 characters long" });
         }
 
         //Checking if email is valid 
-        const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$/
+        const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegEx.test(email)) {
             return res.status(400).json({ message: "invalid email format" })
         }
 
         //checking if user already exist 
-        const user = async () => {
-            return User.findOne({ email: email });
-        }
+        const user = await User.findOne({ email });
+
         if (user) {
             return res.status(400).json({ message: "User already exists" });
         }
 
         //hashing password
-        const salt = async () => {
-            return await bcrypt.genSalt(10);
-        }
+        const salt = await bcrypt.genSalt(10);
 
-        const hashedPassword = async () => {
-            return bcrypt.hash(password, salt);
-        }
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new User({
             fullName,
@@ -45,12 +39,11 @@ export const signup = (req, res) => {
         })
 
         if (newUser) {
-            generateToken(newUser._id, res);
-            const save = async () => {
-                await newUser.save();
-            }
+
+            const savedUser = await newUser.save();
+            generateToken(savedUser._id, res);
             res.status(201).json({
-                _id:newUser._id,
+                _id: newUser._id,
                 fullName: newUser.fullName,
                 email: newUser.email,
                 profilePic: newUser.profilePic
@@ -61,7 +54,7 @@ export const signup = (req, res) => {
 
     } catch (error) {
         console.log("Error in signup  controller", error)
-        res.status(500).json({ message : "Internal server error"})
+        res.status(500).json({ message: "Internal server error" })
     }
 
 }
