@@ -1,3 +1,5 @@
+import { json } from "express";
+import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 
@@ -43,7 +45,16 @@ export const signup = (req, res) => {
         })
 
         if (newUser) {
-            
+            generateToken(newUser._id, res);
+            const save = async () => {
+                await newUser.save();
+            }
+            res.status(201).json({
+                _id:newUser._id,
+                fullName: newUser.fullName,
+                email: newUser.email,
+                profilePic: newUser.profilePic
+            })
         } else {
             res.status(400).json({ message: "Invalid user data" })
         }
