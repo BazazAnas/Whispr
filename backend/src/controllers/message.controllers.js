@@ -33,12 +33,12 @@ export const getChatPartners = async (req, res) => {
                     : msg.senderId.toString())
         )]
 
-        const chatPartner = await User.find({_id: { $in :chatPartnerId }}).select("-password");
+        const chatPartner = await User.find({ _id: { $in: chatPartnerId } }).select("-password");
 
         return res.status(201).json(chatPartner);
     } catch (error) {
         console.log("Error in getChatPartners");
-        return res.status(500).json({ message : "Internal Server Error"});
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
@@ -67,6 +67,16 @@ export const sendMessage = async (req, res) => {
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
+        if (!text && !image) {
+            return res.status(400).json({ message: "Text or image is required." });
+        }
+        if (senderId.equals(receiverId)) {
+            return res.status(400).json({ message: "Cannot send messages to yourself." });
+        }
+        const receiverExists = await User.exists({ _id: receiverId });
+        if (!receiverExists) {
+            return res.status(404).json({ message: "Receiver not found." });
+        }
         let imageURL;
 
         if (image) {
