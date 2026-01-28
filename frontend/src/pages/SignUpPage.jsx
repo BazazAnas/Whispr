@@ -18,7 +18,7 @@ const SignUpPage = () => {
   return (
     <>
       <div className="w-full flex items-center justify-center p-4 bg-slate-900">
-        <div className="relative w-full max-w-6xl md:h-[650px] h-[450px]">
+        <div className="relative w-full max-w-6xl md:h-162.5 h-112.5">
           <BorderAnimatedContainer>
             <div className="w-full flex flex-col md:flex-row">
               {/* FORM CLOUMN - LEFT SIDE */}
@@ -109,7 +109,7 @@ const SignUpPage = () => {
               </div>
 
               {/* FORM ILLUSTRATION - RIGHT SIDE */}
-              <div className="hidden md:w-1/2 md:flex items-center justify-center p-6 bg-gradient-to-bl from-slate-800/20 to-transparent">
+              <div className="hidden md:w-1/2 md:flex items-center justify-center p-6 bg-linear-to-bl from-slate-800/20 to-transparent">
                 <div>
                   <img
                     src="/signup.png"
