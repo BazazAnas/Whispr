@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* 2. Define the theme and animation */
+@theme {
+  --animate-border-rotate: border-rotate 4s linear infinite;
+
+  @keyframes border-rotate {
+    from {
+      --border-angle: 0deg;
+    }
+    to {
+      --border-angle: 360deg;
+    }
+  }
+}
+
+/* 3. Create a custom utility for the background logic */
+@layer components {
+  .animated-border-v4 {
+    /* The first background is the inner color (padding-box) */
+    /* The second background is the animated gradient (border-box) */
+    background: 
+      linear-gradient(var(--color-slate-900), var(--color-slate-900)) padding-box,
+      conic-gradient(
+        from var(--border-angle),
+        transparent 80%,
+        var(--color-cyan-500) 86%,
+        var(--color-cyan-300) 90%,
+        var(--color-cyan-500) 94%,
+        transparent
+      ) border-box;
+    border: 2px solid transparent;
+  }
+}
+
+
+/* 3. Add DaisyUI (v4/v5 compatible) if you're using it */
+@plugin "daisyui";
+
 .input {
   @apply w-full bg-slate-800/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
 }
