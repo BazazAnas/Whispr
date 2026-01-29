@@ -6,6 +6,7 @@ export const useAuthStore = create((set) => ({
     authUser: null,
     isCheckingAuth: true,
     isSigningUp: false,
+    isLoggingIN: false,
 
     checkAuth: async () => {
         try {
@@ -20,17 +21,42 @@ export const useAuthStore = create((set) => ({
     },
 
     signUp: async (data) => {
-        set({isSigningUp: true})
+        set({ isSigningUp: true })
         try {
             const res = await axiosInstance.post("auth/signup", data)
-            set({ authUser : res.data});
+            set({ authUser: res.data });
 
             toast.success('Account Created Successfully!');
         } catch (error) {
-            console.log("error in Signing Up",error);
+            console.log("error in Signing Up", error);
             toast.error(error.response.data.message);
         } finally {
-            set({isSigningUp:false})
+            set({ isSigningUp: false })
+        }
+    },
+
+    login: async (data) => {
+        set({ isLoggingIN: true })
+        try {
+            const res = await axiosInstance.post("auth/login", data)
+            set({ authUser: res.data });
+            toast.success('Account Logged In');
+        } catch (error) {
+            console.log("error in Logging in", error);
+            toast.error(error.response.data.message);
+        } finally {
+            set({ isSigningUp: false })
+        }
+    },
+
+    logout: async () => {
+        try {
+            await axiosInstance.post("auth/logout");
+            set({ authUser: null })
+            toast.success("Successfully logged out");
+        } catch (error) {
+            console.log("error in Logging out", error);
+            toast.error(error.response.data.message);
         }
     }
 }))

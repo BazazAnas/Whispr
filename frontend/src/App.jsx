@@ -35,7 +35,7 @@ const App = () => {
           <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
         </Routes>
 
-        <Toaster />
+        <Toaster position='top-right' />
       </div>
     </>
   )

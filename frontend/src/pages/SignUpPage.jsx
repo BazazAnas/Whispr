@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router";
 import { useAuthStore } from "../store/useAuthStore"
-import BorderAnimatedContainer from "../components/AnimatedBorder"
 import { MessageCircleIcon, UserIcon, LoaderIcon, MailIcon, LockIcon } from "lucide-react";
 
 
@@ -19,7 +18,6 @@ const SignUpPage = () => {
     <>
       <div className="w-full flex items-center justify-center p-4 bg-slate-900">
         <div className="relative w-full max-w-6xl md:h-162.5 h-112.5">
-          <BorderAnimatedContainer>
             <div className="w-full flex flex-col md:flex-row">
               {/* FORM CLOUMN - LEFT SIDE */}
               <div className="md:w-1/2 p-8 flex items-center justify-center md:border-r border-slate-600/30">
@@ -30,7 +28,6 @@ const SignUpPage = () => {
                     <h2 className="text-2xl font-bold text-slate-200 mb-2">Create Account</h2>
                     <p className="text-slate-400">Sign up for a new account</p>
                   </div>
-
                   {/* FORM */}
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* FULL NAME */}
@@ -128,7 +125,6 @@ const SignUpPage = () => {
                 </div>
               </div>
             </div>
-          </BorderAnimatedContainer>
         </div>
       </div>
     </>
