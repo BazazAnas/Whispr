@@ -8,13 +8,16 @@ import MessageLoadingSkeleton from './MessageLoadingSkeleton';
 
 const ChatContainer = () => {
 
-  const { getMessagesByUserId, messages, selectedUser, isMessagesLoading } = useChatStore()
+  const { getMessagesByUserId, messages, selectedUser, isMessagesLoading, listenToMessages, noListenToMessages } = useChatStore()
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessagesByUserId(selectedUser._id)
-  }, [selectedUser, getMessagesByUserId])
+    listenToMessages()
+
+    return () => noListenToMessages()
+  }, [selectedUser, getMessagesByUserId, listenToMessages, noListenToMessages])
 
   useEffect(() => {
     if (messageEndRef.current) {
