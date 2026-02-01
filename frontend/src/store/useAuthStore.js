@@ -1,17 +1,23 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client"
 
-export const useAuthStore = create((set) => ({
+const BASE_URL = "http://localhost:3000"
+
+export const useAuthStore = create((set, get) => ({
     authUser: null,
     isCheckingAuth: true,
     isSigningUp: false,
     isLoggingIN: false,
+    socket: null,
+    onlineUsers: [],
 
     checkAuth: async () => {
         try {
             const res = await axiosInstance.get("/auth/check");
             set({ authUser: res.data });
+            get().connectSocket()
         } catch (error) {
             console.log("Error in Auth Check", error);
             set({ authUser: null })
@@ -27,6 +33,8 @@ export const useAuthStore = create((set) => ({
             set({ authUser: res.data });
 
             toast.success('Account Created Successfully!');
+
+            get().connectSocket()
         } catch (error) {
             console.log("error in Signing Up", error);
             toast.error(error.response.data.message);
@@ -47,6 +55,8 @@ export const useAuthStore = create((set) => ({
         } finally {
             set({ isSigningUp: false })
         }
+
+        get().connectSocket()
     },
 
     logout: async () => {
@@ -54,6 +64,7 @@ export const useAuthStore = create((set) => ({
             await axiosInstance.post("auth/logout");
             set({ authUser: null })
             toast.success("Successfully logged out");
+            get().disconnectSocket()
         } catch (error) {
             console.log("error in Logging out", error);
             toast.error(error.response.data.message);
@@ -62,11 +73,35 @@ export const useAuthStore = create((set) => ({
 
     updateProfile: async (data) => {
         try {
-            await axiosInstance.put("auth/update-profile",data)
+            await axiosInstance.put("auth/update-profile", data)
             toast.success("Profile picture updated successfully")
         } catch (error) {
             console.log("error in update profile", error);
             toast.error("Error updating profile picture");
         }
+    },
+
+    connectSocket: () => {
+        const { authUser } = get()
+
+        if (!authUser || get().socket?.connected) {
+            return
+        }
+
+        const socket = io(BASE_URL, {
+            withCredentials: true,
+        })
+
+        socket.connect()
+
+        set({ socket })
+
+        socket.on("getOnlineUsers", (userIds) => {
+            set({ onlineUsers: userIds })
+        })
+    },
+
+    disconnectSocket: () => {
+        if (get().socket.connected) get().socket.disconnect()
     }
 }))

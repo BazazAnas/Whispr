@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore.js";
 import NoChatsFound from "./NoChatsFound.jsx";
 import UserLoadingSkeleton from "./UserLoadingSkeleton.jsx";
+import { useAuthStore } from "../store/useAuthStore.js";
 
 const ChatsList = () => {
 
     const { setSelectedUser, getMyChatPartners, chats, isUsersLoading } = useChatStore();
+    const { onlineUsers } = useAuthStore();
 
     useEffect(() => {
         getMyChatPartners()
@@ -26,22 +28,22 @@ const ChatsList = () => {
                     <div
                         key={chat._id}
                         className="
-                    bg-cyan-500/10
-                    p-4
-                    rounded-lg
-                    cursor-pointer
-                    hover:bg-cyan-500/20
-                     transition-colors
+                        bg-cyan-500/10
+                        p-4
+                        rounded-lg
+                        cursor-pointer
+                        hover:bg-cyan-500/20
+                        transition-colors
                     "
-                    onClick={()=> setSelectedUser(chat)}
+                        onClick={() => setSelectedUser(chat)}
                     >
                         <div className="flex items-center gap-3">
-                            <div className={`avatar avatar-online`}>
+                            <div className={`avatar ${onlineUsers.includes(chat._id) ? `avatar-online` : `avatar-offline`}`}>
                                 <div className="size-12 rounded-full">
                                     <img src={chat.profilePic || "/avatar.png"} alt={chat.fullName} />
                                 </div>
                             </div>
-                            <h4 className="text-slate-200 font-medium truncate">{chat.fullName}</h4>
+                            <h4 className="text-slate-200 font-medium truncate">{chat.fullName.charAt(0).toUpperCase() + chat.fullName.slice(1)}</h4>
                         </div>
 
                     </div>
