@@ -9,11 +9,12 @@ import { app, server } from "./lib/socketio.js";
 
 env.config();
 
+const originUrl = process.env.CLIENT_URL.split(",");
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "15mb" }));
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
+app.use(cors({ origin: originUrl , credentials: true }))
 app.use(cookieParser());
 
 app.use("/api/auth/", authRoutes);

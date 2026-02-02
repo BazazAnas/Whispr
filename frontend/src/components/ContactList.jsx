@@ -1,19 +1,18 @@
 import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore.js";
-import NoChatsFound from "./NoChatsFound.jsx";
 import UserLoadingSkeleton from "./UserLoadingSkeleton.jsx";
 import { useAuthStore } from "../store/useAuthStore.js";
 
 const ContactList = () => {
 
-    const { getAllContacts, setSelectedUser, isUserLoading, allContacts } = useChatStore();
+    const { getAllContacts, setSelectedUser, isUsersLoading, allContacts } = useChatStore();
     const { onlineUsers } = useAuthStore()
 
     useEffect(() => {
         getAllContacts()
     }, [getAllContacts]);
 
-    if (isUserLoading) {
+    if (isUsersLoading) {
         return <UserLoadingSkeleton />
     }
 
