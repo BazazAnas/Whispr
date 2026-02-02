@@ -26,7 +26,7 @@ Start private chats
 Fetch chat history
 
 ## 🛠️ Tech Stack
- ###Frontend
+ ### Frontend
 
 React
 
