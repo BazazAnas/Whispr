@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router";
 import { useAuthStore } from "../store/useAuthStore"
 import { MessageCircleIcon, LoaderIcon, MailIcon, LockIcon } from "lucide-react";
+import AnimatedBorder from "../components/AnimatedBorder";
 
 
 const LoginPage = () => {
@@ -18,6 +19,7 @@ const LoginPage = () => {
     <>
       <div className="w-full flex items-center justify-center p-4 bg-slate-900">
         <div className="relative w-full max-w-6xl md:h-162.5 h-112.5">
+          <AnimatedBorder>
             <div className="w-full flex flex-col md:flex-row">
               {/* FORM CLOUMN - LEFT SIDE */}
               <div className="md:w-1/2 p-8 flex items-center justify-center md:border-r border-slate-600/30">
@@ -106,7 +108,7 @@ const LoginPage = () => {
                 </div>
               </div>
             </div>
-          
+          </AnimatedBorder>
         </div>
       </div>
     </>
